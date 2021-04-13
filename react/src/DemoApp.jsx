@@ -16,47 +16,97 @@ export default class DemoApp extends React.Component {
     currentEvents: [],
     response: {},
     listEvents: [],
+    styleModal: {
+      top: 0,
+      left: 0,
+      opacity: 0,
+    },
   };
 
   componentWillMount() {
     this.setState({
-      listEvents: [...response.salon.booking, ...response.salon.salonDayoff, ...response.holiday],
+      listEvents: [
+        ...response.salon.booking,
+        ...response.salon.salonDayoff,
+        ...response.holiday,
+      ],
     });
   }
 
   render() {
     return (
-      <div className="demo-app">
-        {this.renderSidebar()}
-        <div className="demo-app-main">
-          <FullCalendar
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            headerToolbar={{
-              left: "prev,next today",
-              center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay",
-            }}
-            initialView="dayGridMonth"
-            editable={true}
-            selectable={true}
-            selectMirror={true}
-            dayMaxEvents={true}
-            weekends={true}
-            showNonCurrentDates={false}
-            // initialEvents={this.state.response.salon.booking} // alternatively, use the `events` setting to fetch from a feed
-            select={this.handleDateSelect}
-            // eventContent={renderEventContent} // custom render function
-            eventClick={this.handleEventClick}
-            // eventsSet={this.handleEvents} // called after events are initialized/added/changed/removed
-            /* you can update a remote database when these fire:
+      <div style={{ position: "relative" }}>
+        <div className="demo-app">
+          {this.renderSidebar()}
+          <div className="demo-app-main">
+            <FullCalendar
+              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+              headerToolbar={{
+                left: "prev,next today",
+                center: "title",
+                right: "dayGridMonth,timeGridWeek,timeGridDay",
+              }}
+              initialView="dayGridMonth"
+              editable={true}
+              selectable={true}
+              selectMirror={true}
+              dayMaxEvents={true}
+              weekends={true}
+              showNonCurrentDates={false}
+              // initialEvents={this.state.response.salon.booking} // alternatively, use the `events` setting to fetch from a feed
+              select={this.handleDateSelect}
+              // eventContent={renderEventContent} // custom render function
+              eventClick={this.handleEventClick}
+              eventsSet={this.handleEvents} // called after events are initialized/added/changed/removed
+              /* you can update a remote database when these fire:
             eventAdd={function(){}}
             eventChange={function(){}}
             eventRemove={function(){}}
             */
-            displayEventTime={false}
-            // eventDisplay={this.handleEventDisplay()}
-            events={this.state.listEvents}
-          />
+              displayEventTime={false}
+              // eventDisplay={this.handleEventDisplay()}
+              events={this.state.listEvents}
+            />
+          </div>
+        </div>
+
+        <div
+          className="tungdv"
+          style={{
+            zIndex: 1,
+            border: "1px solid #dcdcdc",
+            width: "400px",
+            background: "#FFFFFF",
+            position: "absolute",
+            borderRadius: "8px",
+            boxShadow:
+              "0 24px 38px 3px rgb(0 0 0 / 14%), 0 9px 46px 8px rgb(0 0 0 / 12%), 0 11px 15px -7px rgb(0 0 0 / 20%)",
+            transition: "opacity 200ms ease-in-out",
+            top: `${this.state.styleModal.top}px`,
+            left: `${this.state.styleModal.left + 10}px`,
+            opacity: `${this.state.styleModal.opacity}`,
+          }}
+        >
+          <div className="d-flex justify-content-end">
+            <span className="mr-2">Edit</span>
+            <span className="mr-2">Delete</span>
+            <span
+              className="mr-2"
+              onClick={this.handleHideModal}
+              style={{ cursor: "pointer" }}
+            >
+              Close
+            </span>
+          </div>
+          <div>
+            <div>tungdv</div>
+            <div>tungdv</div>
+            <div>tungdv</div>
+            <div>tungdv</div>
+            <div>tungdv</div>
+            <div>tungdv</div>
+            <div>tungdv</div>
+          </div>
         </div>
       </div>
     );
@@ -125,18 +175,28 @@ export default class DemoApp extends React.Component {
           </label>
         </div>
 
-        <div className="demo-app-sidebar-section">
+        {/* <div className="demo-app-sidebar-section">
           <h2>All Events ({this.state.currentEvents.length})</h2>
-          {/* <ul>{this.state.currentEvents.map(renderSidebarEvent)}</ul> */}
-        </div>
+          <ul>{this.state.currentEvents.map(renderSidebarEvent)}</ul>
+        </div> */}
       </div>
     );
   }
 
+  handleHideModal = () => {
+    this.setState({
+      styleModal: {
+        opacity: 0,
+      },
+    });
+  };
+
   handleShowBooking = () => {
     this.setState({
       showBooking: !this.state.showBooking,
-      listEvents: !this.state.showBooking ? [...this.state.listEvents, ...response.salon.booking] : this.deleteElementArray('booking'),
+      listEvents: !this.state.showBooking
+        ? [...this.state.listEvents, ...response.salon.booking]
+        : this.deleteElementArray("booking"),
     });
   };
 
@@ -149,21 +209,24 @@ export default class DemoApp extends React.Component {
   handleShowDayOff = () => {
     this.setState({
       showDayOff: !this.state.showDayOff,
-      listEvents: !this.state.showDayOff ? [...this.state.listEvents, ...response.salon.salonDayoff] : this.deleteElementArray('off'),
+      listEvents: !this.state.showDayOff
+        ? [...this.state.listEvents, ...response.salon.salonDayoff]
+        : this.deleteElementArray("off"),
     });
   };
 
   handleShowHoliday = () => {
     this.setState({
       showHoliday: !this.state.showHoliday,
-      listEvents: !this.state.showHoliday ? [...this.state.listEvents, ...response.holiday] : this.deleteElementArray('holiday'),
+      listEvents: !this.state.showHoliday
+        ? [...this.state.listEvents, ...response.holiday]
+        : this.deleteElementArray("holiday"),
     });
-
   };
 
   deleteElementArray = (type) => {
-    return this.state.listEvents.filter(item => item.type !== `${type}`)
-  }
+    return this.state.listEvents.filter((item) => item.type !== `${type}`);
+  };
 
   handleDateSelect = (selectInfo) => {
     let title = prompt("Please enter a new title for your event");
@@ -183,13 +246,14 @@ export default class DemoApp extends React.Component {
   };
 
   handleEventClick = (clickInfo) => {
-    if (
-      confirm(
-        `Are you sure you want to delete the event '${clickInfo.event.title}'`
-      )
-    ) {
-      clickInfo.event.remove();
-    }
+    // console.log(clickInfo);
+    this.setState({
+      styleModal: {
+        top: clickInfo.jsEvent.clientY,
+        left: clickInfo.jsEvent.clientX,
+        opacity: 1,
+      },
+    });
   };
 
   handleEvents = (events) => {

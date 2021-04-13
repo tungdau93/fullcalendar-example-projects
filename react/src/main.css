@@ -57,3 +57,7 @@ b { /* used for event dates/times */
 .fc-v-event .fc-event-main {
   color: black;
 }
+
+.fc-direction-ltr .fc-timegrid-col-events {
+  margin: 0 10% 0 0;
+}

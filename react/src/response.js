@@ -14,7 +14,7 @@ export default {
         type: "off",
         title: "Nghỉ đổi chủ",
         start: "2021-04-13",
-        end: "2021-04-13",
+        end: "2021-04-14",
       },
       {
         id: 19,
