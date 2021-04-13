@@ -1,55 +1,71 @@
-import React from 'react'
-import FullCalendar, { formatDate } from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import { INITIAL_EVENTS, createEventId } from './event-utils'
+import React from "react";
+import FullCalendar, { formatDate } from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import { INITIAL_EVENTS, createEventId } from "./event-utils";
+import "bootstrap/dist/css/bootstrap.css";
+import response from "./response";
 
 export default class DemoApp extends React.Component {
-
   state = {
-    weekendsVisible: true,
-    currentEvents: []
+    showBooking: true,
+    showStylist: false,
+    showDayOff: true,
+    showHoliday: true,
+    currentEvents: [],
+    response: {},
+    listEvents: [],
+  };
+
+  componentWillMount() {
+    this.setState({
+      listEvents: [...response.salon.booking, ...response.salon.salonDayoff, ...response.holiday],
+    });
   }
 
   render() {
     return (
-      <div className='demo-app'>
+      <div className="demo-app">
         {this.renderSidebar()}
-        <div className='demo-app-main'>
+        <div className="demo-app-main">
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             headerToolbar={{
-              left: 'prev,next today',
-              center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay'
+              left: "prev,next today",
+              center: "title",
+              right: "dayGridMonth,timeGridWeek,timeGridDay",
             }}
-            initialView='dayGridMonth'
+            initialView="dayGridMonth"
             editable={true}
             selectable={true}
             selectMirror={true}
             dayMaxEvents={true}
-            weekends={this.state.weekendsVisible}
-            initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
+            weekends={true}
+            showNonCurrentDates={false}
+            // initialEvents={this.state.response.salon.booking} // alternatively, use the `events` setting to fetch from a feed
             select={this.handleDateSelect}
-            eventContent={renderEventContent} // custom render function
+            // eventContent={renderEventContent} // custom render function
             eventClick={this.handleEventClick}
-            eventsSet={this.handleEvents} // called after events are initialized/added/changed/removed
+            // eventsSet={this.handleEvents} // called after events are initialized/added/changed/removed
             /* you can update a remote database when these fire:
             eventAdd={function(){}}
             eventChange={function(){}}
             eventRemove={function(){}}
             */
+            displayEventTime={false}
+            // eventDisplay={this.handleEventDisplay()}
+            events={this.state.listEvents}
           />
         </div>
       </div>
-    )
+    );
   }
 
   renderSidebar() {
     return (
-      <div className='demo-app-sidebar'>
-        <div className='demo-app-sidebar-section'>
+      <div className="demo-app-sidebar">
+        <div className="demo-app-sidebar-section">
           <h2>Instructions</h2>
           <ul>
             <li>Select dates and you will be prompted to create a new event</li>
@@ -57,37 +73,103 @@ export default class DemoApp extends React.Component {
             <li>Click an event to delete it</li>
           </ul>
         </div>
-        <div className='demo-app-sidebar-section'>
-          <label>
-            <input
-              type='checkbox'
-              checked={this.state.weekendsVisible}
-              onChange={this.handleWeekendsToggle}
-            ></input>
-            toggle weekends
+        <div className="demo-app-sidebar-section d-flex align-items-center">
+          <input
+            className="mr-2"
+            type="checkbox"
+            id="booking"
+            checked={this.state.showBooking}
+            onChange={this.handleShowBooking}
+          />
+          <label htmlFor="booking" className="mb-0">
+            Booking
           </label>
         </div>
-        <div className='demo-app-sidebar-section'>
+
+        <div className="demo-app-sidebar-section d-flex align-items-center">
+          <input
+            className="mr-2"
+            type="checkbox"
+            id="stylist"
+            checked={this.state.showStylist}
+            onChange={this.handleShowStylist}
+          />
+          <label htmlFor="stylist" className="mb-0">
+            Stylist
+          </label>
+        </div>
+
+        <div className="demo-app-sidebar-section d-flex align-items-center">
+          <input
+            className="mr-2"
+            type="checkbox"
+            id="showDayOff"
+            checked={this.state.showDayOff}
+            onChange={this.handleShowDayOff}
+          />
+          <label htmlFor="showDayOff" className="mb-0">
+            Day Off
+          </label>
+        </div>
+
+        <div className="demo-app-sidebar-section d-flex align-items-center">
+          <input
+            className="mr-2"
+            type="checkbox"
+            id="showHoliday"
+            checked={this.state.showHoliday}
+            onChange={this.handleShowHoliday}
+          />
+          <label htmlFor="showHoliday" className="mb-0">
+            Holiday
+          </label>
+        </div>
+
+        <div className="demo-app-sidebar-section">
           <h2>All Events ({this.state.currentEvents.length})</h2>
-          <ul>
-            {this.state.currentEvents.map(renderSidebarEvent)}
-          </ul>
+          {/* <ul>{this.state.currentEvents.map(renderSidebarEvent)}</ul> */}
         </div>
       </div>
-    )
+    );
   }
 
-  handleWeekendsToggle = () => {
+  handleShowBooking = () => {
     this.setState({
-      weekendsVisible: !this.state.weekendsVisible
-    })
+      showBooking: !this.state.showBooking,
+      listEvents: !this.state.showBooking ? [...this.state.listEvents, ...response.salon.booking] : this.deleteElementArray('booking'),
+    });
+  };
+
+  handleShowStylist = () => {
+    this.setState({
+      showStylist: !this.state.showStylist,
+    });
+  };
+
+  handleShowDayOff = () => {
+    this.setState({
+      showDayOff: !this.state.showDayOff,
+      listEvents: !this.state.showDayOff ? [...this.state.listEvents, ...response.salon.salonDayoff] : this.deleteElementArray('off'),
+    });
+  };
+
+  handleShowHoliday = () => {
+    this.setState({
+      showHoliday: !this.state.showHoliday,
+      listEvents: !this.state.showHoliday ? [...this.state.listEvents, ...response.holiday] : this.deleteElementArray('holiday'),
+    });
+
+  };
+
+  deleteElementArray = (type) => {
+    return this.state.listEvents.filter(item => item.type !== `${type}`)
   }
 
   handleDateSelect = (selectInfo) => {
-    let title = prompt('Please enter a new title for your event')
-    let calendarApi = selectInfo.view.calendar
+    let title = prompt("Please enter a new title for your event");
+    let calendarApi = selectInfo.view.calendar;
 
-    calendarApi.unselect() // clear date selection
+    calendarApi.unselect(); // clear date selection
 
     if (title) {
       calendarApi.addEvent({
@@ -95,39 +177,53 @@ export default class DemoApp extends React.Component {
         title,
         start: selectInfo.startStr,
         end: selectInfo.endStr,
-        allDay: selectInfo.allDay
-      })
+        allDay: selectInfo.allDay,
+      });
     }
-  }
+  };
 
   handleEventClick = (clickInfo) => {
-    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove()
+    if (
+      confirm(
+        `Are you sure you want to delete the event '${clickInfo.event.title}'`
+      )
+    ) {
+      clickInfo.event.remove();
     }
-  }
+  };
 
   handleEvents = (events) => {
     this.setState({
-      currentEvents: events
-    })
-  }
+      currentEvents: events,
+    });
+  };
 
+  handleEventDisplay = () => {
+    if (this.state.showBooking || this.state.showHoliday) return "auto";
+    return "none";
+  };
 }
 
 function renderEventContent(eventInfo) {
   return (
-    <>
-      <b>{eventInfo.timeText}</b>
-      <i>{eventInfo.event.title}</i>
-    </>
-  )
+    <div className="d-flex">
+      <div className="mr-1">{eventInfo.timeText}</div>
+      <div className="ml-1">{eventInfo.event.title}</div>
+    </div>
+  );
 }
 
 function renderSidebarEvent(event) {
   return (
     <li key={event.id}>
-      <b>{formatDate(event.start, {year: 'numeric', month: 'short', day: 'numeric'})}</b>
+      <b>
+        {formatDate(event.start, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })}
+      </b>
       <i>{event.title}</i>
     </li>
-  )
+  );
 }
