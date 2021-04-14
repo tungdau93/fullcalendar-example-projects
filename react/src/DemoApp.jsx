@@ -6,6 +6,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { INITIAL_EVENTS, createEventId } from "./event-utils";
 import "bootstrap/dist/css/bootstrap.css";
 import response from "./response";
+import { Card } from "react-bootstrap";
 
 export default class DemoApp extends React.Component {
   state = {
@@ -21,6 +22,8 @@ export default class DemoApp extends React.Component {
       left: 0,
       opacity: 0,
     },
+    event: {},
+    modalSettingColor: false,
   };
 
   componentWillMount() {
@@ -46,32 +49,44 @@ export default class DemoApp extends React.Component {
                 center: "title",
                 right: "dayGridMonth,timeGridWeek,timeGridDay",
               }}
-              initialView="dayGridMonth"
+              initialView="timeGridWeek"
               editable={true}
               selectable={true}
               selectMirror={true}
               dayMaxEvents={true}
               weekends={true}
               showNonCurrentDates={false}
-              // initialEvents={this.state.response.salon.booking} // alternatively, use the `events` setting to fetch from a feed
+              allDaySlot={false}
               select={this.handleDateSelect}
-              // eventContent={renderEventContent} // custom render function
+              eventContent={renderEventContent} // custom render function
               eventClick={this.handleEventClick}
               eventsSet={this.handleEvents} // called after events are initialized/added/changed/removed
               /* you can update a remote database when these fire:
-            eventAdd={function(){}}
-            eventChange={function(){}}
-            eventRemove={function(){}}
-            */
-              displayEventTime={false}
-              // eventDisplay={this.handleEventDisplay()}
+              eventAdd={function(){}}
+              eventChange={function(){}}
+              eventRemove={function(){}}
+              */
+              navLinks={true}
+              displayEventTime={true}
+              displayEventEnd={false}
               events={this.state.listEvents}
+              eventTimeFormat={{
+                hour: "numeric",
+                minute: "2-digit",
+                meridiem: "uppercase",
+              }}
+              slotLabelFormat={{
+                hour: "numeric",
+                minute: "2-digit",
+                omitZeroMinute: false,
+                meridiem: "uppercase",
+              }}
             />
           </div>
         </div>
 
         <div
-          className="tungdv"
+          className="tungdv px-2 py-2"
           style={{
             zIndex: 1,
             border: "1px solid #dcdcdc",
@@ -89,23 +104,24 @@ export default class DemoApp extends React.Component {
         >
           <div className="d-flex justify-content-end">
             <span className="mr-2">Edit</span>
-            <span className="mr-2">Delete</span>
             <span
               className="mr-2"
-              onClick={this.handleHideModal}
+              onClick={this.handleDeleteBooking}
               style={{ cursor: "pointer" }}
             >
+              Delete
+            </span>
+            <span onClick={this.handleHideModal} style={{ cursor: "pointer" }}>
               Close
             </span>
           </div>
           <div>
-            <div>tungdv</div>
-            <div>tungdv</div>
-            <div>tungdv</div>
-            <div>tungdv</div>
-            <div>tungdv</div>
-            <div>tungdv</div>
-            <div>tungdv</div>
+            <div>
+              <span>customer 1 </span>
+              <span> - </span>
+              <span>stylist 1</span>
+              <div>time</div>
+            </div>
           </div>
         </div>
       </div>
@@ -136,17 +152,108 @@ export default class DemoApp extends React.Component {
           </label>
         </div>
 
-        <div className="demo-app-sidebar-section d-flex align-items-center">
-          <input
-            className="mr-2"
-            type="checkbox"
-            id="stylist"
-            checked={this.state.showStylist}
-            onChange={this.handleShowStylist}
-          />
-          <label htmlFor="stylist" className="mb-0">
-            Stylist
-          </label>
+        <div className="demo-app-sidebar-section align-items-center">
+          <div>Stylist</div>
+          <div>
+            <div className="d-flex justify-content-between">
+              <div>
+                <input
+                  className="mr-2"
+                  type="checkbox"
+                  id="stylist"
+                  checked={this.state.showStylist}
+                  onChange={this.handleShowStylist}
+                />
+                <label htmlFor="stylist" className="mb-0">
+                  Stylist 1
+                </label>
+              </div>
+              <div style={{ position: "relative" }}>
+                <svg
+                  height="12px"
+                  aria-hidden="true"
+                  focusable="false"
+                  data-prefix="fas"
+                  data-icon="ellipsis-v"
+                  className="svg-inline--fa fa-ellipsis-v fa-w-6"
+                  role="img"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 192 512"
+                  onClick={this.handleModalSettingColor}
+                >
+                  <path
+                    fill="currentColor"
+                    d="M96 184c39.8 0 72 32.2 72 72s-32.2 72-72 72-72-32.2-72-72 32.2-72 72-72zM24 80c0 39.8 32.2 72 72 72s72-32.2 72-72S135.8 8 96 8 24 40.2 24 80zm0 352c0 39.8 32.2 72 72 72s72-32.2 72-72-32.2-72-72-72-72 32.2-72 72z"
+                  ></path>
+                </svg>
+
+                {this.state.modalSettingColor ? (
+                  <Card style={{ position: "absolute", width: "130px" }}>
+                    <Card.Header>Setting color</Card.Header>
+                    <Card.Body>
+                      <div className="d-flex justify-content-between">
+                        <span
+                          className="dot-red"
+                          onClick={(event) => {
+                            this.handleSetColor("red", event);
+                          }}
+                        ></span>
+                        <span
+                          className="dot-green"
+                          onClick={(event) => {
+                            this.handleSetColor("green", event);
+                          }}
+                        ></span>
+                        <span
+                          className="dot-pink"
+                          onClick={(event) => {
+                            this.handleSetColor("pink", event);
+                          }}
+                        ></span>
+                        <span
+                          className="dot-gray"
+                          onClick={(event) => {
+                            this.handleSetColor("gray", event);
+                          }}
+                        ></span>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                ) : null}
+              </div>
+            </div>
+
+            {/* <div className="d-flex justify-content-between">
+              <div>
+                <input
+                  className="mr-2"
+                  type="checkbox"
+                  id="stylist"
+                  checked={this.state.showStylist}
+                  onChange={this.handleShowStylist}
+                />
+                <label htmlFor="stylist" className="mb-0">
+                  Stylist 2
+                </label>
+              </div>
+              <svg
+                height="12px"
+                aria-hidden="true"
+                focusable="false"
+                data-prefix="fas"
+                data-icon="ellipsis-v"
+                className="svg-inline--fa fa-ellipsis-v fa-w-6"
+                role="img"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 192 512"
+              >
+                <path
+                  fill="currentColor"
+                  d="M96 184c39.8 0 72 32.2 72 72s-32.2 72-72 72-72-32.2-72-72 32.2-72 72-72zM24 80c0 39.8 32.2 72 72 72s72-32.2 72-72S135.8 8 96 8 24 40.2 24 80zm0 352c0 39.8 32.2 72 72 72s72-32.2 72-72-32.2-72-72-72-72 32.2-72 72z"
+                ></path>
+              </svg>
+            </div> */}
+          </div>
         </div>
 
         <div className="demo-app-sidebar-section d-flex align-items-center">
@@ -174,14 +281,36 @@ export default class DemoApp extends React.Component {
             Holiday
           </label>
         </div>
-
-        {/* <div className="demo-app-sidebar-section">
-          <h2>All Events ({this.state.currentEvents.length})</h2>
-          <ul>{this.state.currentEvents.map(renderSidebarEvent)}</ul>
-        </div> */}
       </div>
     );
   }
+
+  handleModalSettingColor = () => {
+    this.setState({
+      modalSettingColor: !this.state.modalSettingColor,
+    });
+  };
+
+  handleSetColor = (color, event) => {
+    this.setState({
+      modalSettingColor: false,
+    });
+
+    const listNoChangeColor = this.state.listEvents.filter(
+      (item) => item.stylistCd + "" !== 1 + ""
+    );
+    const listChangeColor = this.state.listEvents.filter(
+      (item) => item.stylistCd + "" === 1 + ""
+    );
+
+    listChangeColor.map((item) => {
+      item.color = color;
+    });
+
+    this.setState({
+      listEvents: [...listNoChangeColor, ...listChangeColor],
+    });
+  };
 
   handleHideModal = () => {
     this.setState({
@@ -189,6 +318,16 @@ export default class DemoApp extends React.Component {
         opacity: 0,
       },
     });
+  };
+
+  handleDeleteBooking = () => {
+    const result = this.state.listEvents.filter(
+      (item) => item.id + "" !== this.state.event.id + ""
+    );
+    this.setState({
+      listEvents: result,
+    });
+    this.handleHideModal();
   };
 
   handleShowBooking = () => {
@@ -246,13 +385,14 @@ export default class DemoApp extends React.Component {
   };
 
   handleEventClick = (clickInfo) => {
-    // console.log(clickInfo);
+    console.log(clickInfo);
     this.setState({
       styleModal: {
         top: clickInfo.jsEvent.clientY,
         left: clickInfo.jsEvent.clientX,
         opacity: 1,
       },
+      event: clickInfo.event,
     });
   };
 
@@ -270,7 +410,10 @@ export default class DemoApp extends React.Component {
 
 function renderEventContent(eventInfo) {
   return (
-    <div className="d-flex">
+    <div
+      className="d-flex px-1"
+      style={{ height: "15px", overflow: "hidden", whiteSpace: "nowrap" }}
+    >
       <div className="mr-1">{eventInfo.timeText}</div>
       <div className="ml-1">{eventInfo.event.title}</div>
     </div>

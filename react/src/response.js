@@ -10,16 +10,16 @@ export default {
     salonCd: 1,
     salonDayoff: [
       {
-        id: 18,
+        id: 12,
         type: "off",
-        title: "Nghỉ đổi chủ",
+        // title: "Nghỉ đổi chủ",
         start: "2021-04-13",
         end: "2021-04-14",
       },
       {
-        id: 19,
+        id: 13,
         type: "off",
-        title: "Nghỉ đi bão",
+        // title: "Nghỉ đi bão",
         start: "2021-04-17",
         end: "2021-04-17",
       },
@@ -28,6 +28,7 @@ export default {
       {
         id: 1,
         type: "booking",
+        title: 'Đi cắt tóccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',
         stylistCd: 1,
         stylistName: "Style list A",
         customerCd: 1,
@@ -38,6 +39,7 @@ export default {
       {
         id: 2,
         type: "booking",
+        title: 'Đi cắt đầu',
         stylistCd: 2,
         stylistName: "Style list C",
         customerCd: 2,
@@ -48,6 +50,7 @@ export default {
       {
         id: 3,
         type: "booking",
+        title: 'Đi gội đầu',
         stylistCd: 2,
         stylistName: "Style list C",
         customerCd: 3,
@@ -58,6 +61,7 @@ export default {
       {
         id: 4,
         type: "booking",
+        title: 'làm đẹp',
         stylistCd: 1,
         stylistName: "Style list A",
         customerCd: 1,
@@ -68,6 +72,7 @@ export default {
       {
         id: 5,
         type: "booking",
+        title: 'Đi cắt tóc',
         stylistCd: 2,
         stylistName: "Style list C",
         customerCd: 2,
@@ -78,6 +83,7 @@ export default {
       {
         id: 6,
         type: "booking",
+        title: 'Đi cắt tóc',
         stylistCd: 2,
         stylistName: "Style list C",
         customerCd: 3,
@@ -88,6 +94,7 @@ export default {
       {
         id: 7,
         type: "booking",
+        title: 'Đi cắt tóc',
         stylistCd: 1,
         stylistName: "Style list A",
         customerCd: 1,
@@ -98,6 +105,7 @@ export default {
       {
         id: 8,
         type: "booking",
+        title: 'Đi cắt tóc',
         stylistCd: 2,
         stylistName: "Style list C",
         customerCd: 2,
@@ -108,6 +116,7 @@ export default {
       {
         id: 9,
         type: "booking",
+        title: 'Đi cắt tóc',
         stylistCd: 2,
         stylistName: "Style list C",
         customerCd: 3,
@@ -118,6 +127,7 @@ export default {
       {
         id: 10,
         type: "booking",
+        title: 'Đi cắt tóc',
         stylistCd: 1,
         stylistName: "Style list A",
         customerCd: 1,
@@ -128,6 +138,7 @@ export default {
       {
         id: 11,
         type: "booking",
+        title: 'Đi cắt tóc',
         stylistCd: 2,
         stylistName: "Style list C",
         customerCd: 2,
@@ -173,23 +184,27 @@ export default {
   ],
   holiday: [
     {
-      id: 15,
+      id: 14,
       type: "holiday",
       title: "Giỗ tổ Hùng Vương",
       start: "2021-04-21",
       end: "2021-04-21",
+      // display: 'background',
+      // color: 'red',
     },
     {
-      id: 16,
+      id: 15,
       type: "holiday",
       title: "Ngày giải phóng",
       start: "2021-04-30",
       end: "2021-04-30",
+      // display: 'background',
+      // color: 'green',
     },
     {
-      id: 17,
+      id: 16,
       type: "holiday",
-      title: "Ngày Quốc tế lao động",
+      // title: "Ngày Quốc tế lao động",
       start: "2021-05-01",
       end: "2021-05-01",
     },
